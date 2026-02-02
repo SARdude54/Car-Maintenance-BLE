@@ -1,0 +1,10 @@
+08:57:50 **** Incremental Build of configuration Release for project STM_BLE ****
+make -j8 all 
+arm-none-eabi-size  STM_BLE.elf 
+   text	   data	    bss	    dec	    hex	filename
+  31096	    128	   3192	  34416	   8670	STM_BLE.elf
+Finished building: default.size.stdout
+ 
+
+08:57:50 Build Finished. 0 errors, 0 warnings. (took 126ms)
+
