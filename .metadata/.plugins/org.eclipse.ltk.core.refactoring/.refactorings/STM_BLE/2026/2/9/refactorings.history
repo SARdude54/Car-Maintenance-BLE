@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;STM_BLE/BlueNRG_MS/App/gatt_tb.c&apos; to &apos;gatt_db.c&apos;" description="Rename resource &apos;gatt_tb.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="BlueNRG_MS/App/gatt_tb.c" name="gatt_db.c" stamp="1771957202436" updateReferences="true"/>
+</session>

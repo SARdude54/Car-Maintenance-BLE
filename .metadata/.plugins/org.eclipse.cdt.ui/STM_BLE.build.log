@@ -1,10 +1,38 @@
-08:57:50 **** Incremental Build of configuration Release for project STM_BLE ****
+16:38:50 **** Incremental Build of configuration Release for project STM_BLE ****
 make -j8 all 
+arm-none-eabi-gcc "../BlueNRG_MS/App/app_bluenrg_ms.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../BlueNRG_MS/App -I../BlueNRG_MS/Target -I../Core/Inc -I../Drivers/BSP/STM32L4xx_Nucleo -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/BlueNRG-MS/utils -I../Middlewares/ST/BlueNRG-MS/includes -I../Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"BlueNRG_MS/App/app_bluenrg_ms.d" -MT"BlueNRG_MS/App/app_bluenrg_ms.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "BlueNRG_MS/App/app_bluenrg_ms.o"
+../BlueNRG_MS/App/app_bluenrg_ms.c: In function 'MX_BlueNRG_MS_Init':
+../BlueNRG_MS/App/app_bluenrg_ms.c:127:11: warning: unused variable 'bdaddr' [-Wunused-variable]
+  127 |   uint8_t bdaddr[BDADDR_SIZE];
+      |           ^~~~~~
+../BlueNRG_MS/App/app_bluenrg_ms.c:126:11: warning: unused variable 'SERVER_BDADDR' [-Wunused-variable]
+  126 |   uint8_t SERVER_BDADDR[] = {0xaa, 0x00, 0x00, 0xE1, 0x80, 0x02};
+      |           ^~~~~~~~~~~~~
+../BlueNRG_MS/App/app_bluenrg_ms.c:125:11: warning: unused variable 'CLIENT_BDADDR' [-Wunused-variable]
+  125 |   uint8_t CLIENT_BDADDR[] = {0xbb, 0x00, 0x00, 0xE1, 0x80, 0x02};
+      |           ^~~~~~~~~~~~~
+../BlueNRG_MS/App/app_bluenrg_ms.c: In function 'User_Process':
+../BlueNRG_MS/App/app_bluenrg_ms.c:369:13: warning: implicit declaration of function 'SendCountdownValue' [-Wimplicit-function-declaration]
+  369 |             SendCountdownValue(countdown);
+      |             ^~~~~~~~~~~~~~~~~~
+../BlueNRG_MS/App/app_bluenrg_ms.c: At top level:
+../BlueNRG_MS/App/app_bluenrg_ms.c:67:20: warning: 'ble_status_str' defined but not used [-Wunused-function]
+   67 | static const char* ble_status_str(int s) {
+      |                    ^~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "STM_BLE.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/sardude54/Car-Maintenance-BLE/STM_BLE/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM_BLE.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: STM_BLE.elf
+ 
 arm-none-eabi-size  STM_BLE.elf 
+arm-none-eabi-objdump -h -S STM_BLE.elf  > "STM_BLE.list"
+arm-none-eabi-objcopy  -O binary STM_BLE.elf  "STM_BLE.bin"
    text	   data	    bss	    dec	    hex	filename
-  31096	    128	   3192	  34416	   8670	STM_BLE.elf
+  33200	    136	   3200	  36536	   8eb8	STM_BLE.elf
 Finished building: default.size.stdout
  
+Finished building: STM_BLE.bin
+ 
+Finished building: STM_BLE.list
+ 
 
-08:57:50 Build Finished. 0 errors, 0 warnings. (took 126ms)
+16:38:50 Build Finished. 0 errors, 5 warnings. (took 386ms)
 

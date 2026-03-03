@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<item key="replaceBarOpen" value="false"/>
+	<list key="searchhistory">
+		<item value="counter"/>
+		<item value="aci_hal_write_config_data"/>
+		<item value="GAP_CENTRAL_ROLE_IDB05A1"/>
+		<item value="BLE_CHECK"/>
+		<item value="aci"/>
+		<item value="aci_gap_set_discoverable"/>
+		<item value="BLE_Role == CLIENT"/>
+		<item value="aci_hal_read_config_data"/>
+		<item value="write PUBADDR"/>
+		<item value="HAL_Delay(100);"/>
+		<item value="notification_enabled"/>
+	</list>
+</section>
