@@ -41,9 +41,6 @@ cd App
 npm install
 
 ### Verify Android device is connected
-Run:
-
-```bash
 adb devices
 
 # Terminal 1: metro
@@ -51,3 +48,4 @@ npx expo start --dev-client --clear
 
 # Terminal 2: build/install/run android dev client
 npx expo run:android
+```
