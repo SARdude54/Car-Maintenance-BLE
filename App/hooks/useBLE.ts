@@ -1,35 +1,71 @@
-import { BleManager, Device } from '@mocoding/react-native-ble-plx';
-import { useEffect, useState } from 'react';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { Buffer } from "buffer";
+import { useEffect, useRef, useState } from "react";
+import { PermissionsAndroid, Platform } from "react-native";
+import { BleManager, Device, Subscription } from "react-native-ble-plx";
 
-const bleManager = new BleManager();
+const COUNTER_SERVICE_UUID = "12345678-9ABC-DEF0-1122-334455667788";
+const COUNTER_CHAR_UUID    = "12345678-9ABC-DEF0-1122-334455667789";
+
+function leUint32FromBase64(b64: string): number {
+  const bytes = Buffer.from(b64, "base64");
+  if (bytes.length < 4) return 0;
+  return (
+    (bytes[0]      ) |
+    (bytes[1] <<  8) |
+    (bytes[2] << 16) |
+    (bytes[3] << 24)
+  ) >>> 0;
+}
 
 export function useBLE() {
+  const managerRef = useRef(new BleManager());
+  const bleManager = managerRef.current;
+
   const [devices, setDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [counter, setCounter] = useState<number>(0);
+  const [isConnecting, setIsConnecting] = useState(false);
 
-  // Run on app load
+  const monitorSubRef = useRef<Subscription | null>(null);
+  const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    requestPermissions().then(() => startScan());
+    (async () => {
+      await requestPermissions();
+      startScan();
+    })();
 
     return () => {
-      bleManager.destroy();
+      // stop notifications
+      try { monitorSubRef.current?.remove(); } catch {}
+      monitorSubRef.current = null;
+
+      // stop scanning + clear timeout
+      try { bleManager.stopDeviceScan(); } catch {}
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+        scanTimeoutRef.current = null;
+      }
+
+      // bleManager.destroy();
     };
   }, []);
 
   const requestPermissions = async () => {
-    if (Platform.OS === "android") {
-      await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-      ]);
-    }
+    if (Platform.OS !== "android") return;
+
+    await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+    ]);
   };
 
   const startScan = () => {
-    if (isScanning) return;
+    if (isScanning || isConnecting) return;
+
+    setDevices([]);
     setIsScanning(true);
 
     bleManager.startDeviceScan(null, null, (error, device) => {
@@ -38,44 +74,87 @@ export function useBLE() {
         setIsScanning(false);
         return;
       }
+      if (!device) return;
 
-      if (device && device.name) {
-        setDevices((prev) => {
-          if (prev.find((d) => d.id === device.id)) return prev;
-          return [...prev, device];
-        });
-      }
+      const name = device.name ?? device.localName ?? "";
+
+      // show only STM device
+      if (!name.includes("EVABLE")) return;
+
+      setDevices((prev) => {
+        if (prev.some((d) => d.id === device.id)) return prev;
+        return [...prev, device];
+      });
     });
 
-    // Stop after 10 seconds
-    setTimeout(() => {
-      bleManager.stopDeviceScan();
+    // stop after 10 seconds
+    if (scanTimeoutRef.current) clearTimeout(scanTimeoutRef.current);
+    scanTimeoutRef.current = setTimeout(() => {
+      try { bleManager.stopDeviceScan(); } catch {}
       setIsScanning(false);
+      scanTimeoutRef.current = null;
     }, 10000);
   };
 
-  // Connect to a device
   const connectToDevice = async (device: Device) => {
-    try {
-      console.log("Connecting to", device.name);
+    if (isConnecting) return null;
+    setIsConnecting(true);
 
-      const connected = await device.connect();
+    try {
+      console.log("Connecting to", device.name ?? device.localName ?? device.id);
+
+      // stop scan
+      try { bleManager.stopDeviceScan(); } catch {}
+      setIsScanning(false);
+      if (scanTimeoutRef.current) {
+        clearTimeout(scanTimeoutRef.current);
+        scanTimeoutRef.current = null;
+      }
+
+      // clear old notifications
+      try { monitorSubRef.current?.remove(); } catch {}
+      monitorSubRef.current = null;
+
+      const already = await device.isConnected();
+      const connected = already ? device : await device.connect({ autoConnect: false });
+
       setConnectedDevice(connected);
 
-      console.log("Connected! Discovering services...");
       await connected.discoverAllServicesAndCharacteristics();
 
-      console.log("Ready!");
+      const sub = connected.monitorCharacteristicForService(
+        COUNTER_SERVICE_UUID,
+        COUNTER_CHAR_UUID,
+        (error, characteristic) => {
+          if (error) {
+            console.log("Monitor error:", error);
+            return;
+          }
+          if (!characteristic?.value) return;
+
+          const val = leUint32FromBase64(characteristic.value);
+          setCounter(val);
+          console.log("Counter =", val);
+        }
+      );
+
+      monitorSubRef.current = sub;
+      console.log("Connected + subscribed!");
       return connected;
-    } catch (error) {
-      console.log("Connection error:", error);
+    } catch (e) {
+      console.log("Connection error:", e);
+      return null;
+    } finally {
+      setIsConnecting(false);
     }
   };
 
   return {
     devices,
     isScanning,
+    isConnecting, 
     connectedDevice,
+    counter,
     startScan,
     connectToDevice,
   };

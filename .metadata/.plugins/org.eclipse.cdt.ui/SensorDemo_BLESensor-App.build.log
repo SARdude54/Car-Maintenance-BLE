@@ -1,6 +1,6 @@
-20:19:58 **** Incremental Build of configuration Release for project SensorDemo_BLESensor-App ****
+19:14:09 **** Incremental Build of configuration Release for project SensorDemo_BLESensor-App ****
 make -j8 all 
-arm-none-eabi-gcc "../BlueNRG_MS/App/sensor.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../BlueNRG_MS/App -I../BlueNRG_MS/Target -I../Core/Inc -I../Drivers/BSP/STM32L4xx_Nucleo -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/BlueNRG-MS/utils -I../Middlewares/ST/BlueNRG-MS/includes -I../Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"BlueNRG_MS/App/sensor.d" -MT"BlueNRG_MS/App/sensor.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "BlueNRG_MS/App/sensor.o"
+arm-none-eabi-gcc "../BlueNRG_MS/App/app_bluenrg_ms.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../BlueNRG_MS/App -I../BlueNRG_MS/Target -I../Core/Inc -I../Drivers/BSP/STM32L4xx_Nucleo -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/ST/BlueNRG-MS/utils -I../Middlewares/ST/BlueNRG-MS/includes -I../Middlewares/ST/BlueNRG-MS/hci/hci_tl_patterns/Basic -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"BlueNRG_MS/App/app_bluenrg_ms.d" -MT"BlueNRG_MS/App/app_bluenrg_ms.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "BlueNRG_MS/App/app_bluenrg_ms.o"
 arm-none-eabi-gcc -o "SensorDemo_BLESensor-App.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/sardude54/Car-Maintenance-BLE/SensorDemo_BLESensor-App/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SensorDemo_BLESensor-App.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: SensorDemo_BLESensor-App.elf
  
@@ -8,7 +8,7 @@ arm-none-eabi-size  SensorDemo_BLESensor-App.elf
 arm-none-eabi-objdump -h -S SensorDemo_BLESensor-App.elf  > "SensorDemo_BLESensor-App.list"
 arm-none-eabi-objcopy  -O binary SensorDemo_BLESensor-App.elf  "SensorDemo_BLESensor-App.bin"
    text	   data	    bss	    dec	    hex	filename
-  30436	    128	   3296	  33860	   8444	SensorDemo_BLESensor-App.elf
+  30460	    128	   3304	  33892	   8464	SensorDemo_BLESensor-App.elf
 Finished building: default.size.stdout
  
 Finished building: SensorDemo_BLESensor-App.bin
@@ -16,5 +16,5 @@ Finished building: SensorDemo_BLESensor-App.bin
 Finished building: SensorDemo_BLESensor-App.list
  
 
-20:19:58 Build Finished. 0 errors, 0 warnings. (took 377ms)
+19:14:10 Build Finished. 0 errors, 0 warnings. (took 438ms)
 

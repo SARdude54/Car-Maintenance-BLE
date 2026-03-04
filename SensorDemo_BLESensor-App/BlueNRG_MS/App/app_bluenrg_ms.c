@@ -237,18 +237,21 @@ static void User_Init(void)
 static void User_Process(void)
 {
 
-  static uint32_t counter = 0;
-
   if (set_connectable)
   {
     Set_DeviceConnectable();
     set_connectable = FALSE;
   }
 
+  static uint32_t counter = 0;
+  static uint32_t last_ms = 0;
+
   if (connected) {
-    BlueMS_Counter_Update(counter);
-    counter++;
-    HAL_Delay(1000);
+    uint32_t now = HAL_GetTick();
+    if (now - last_ms >= 1000) {
+      last_ms = now;
+      BlueMS_Counter_Update(counter++);
+    }
   }
 
 #if USE_BUTTON
