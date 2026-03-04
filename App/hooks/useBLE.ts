@@ -26,6 +26,7 @@ export function useBLE() {
   const [isScanning, setIsScanning] = useState(false);
   const [counter, setCounter] = useState<number>(0);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [hasCounter, setHasCounter] = useState(false);
 
   const monitorSubRef = useRef<Subscription | null>(null);
   const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -33,7 +34,7 @@ export function useBLE() {
   useEffect(() => {
     (async () => {
       await requestPermissions();
-      startScan();
+      // startScan();
     })();
 
     return () => {
@@ -79,6 +80,7 @@ export function useBLE() {
       const name = device.name ?? device.localName ?? "";
 
       // show only STM device
+      // TODO: make sure its only STM devices, not my specific one
       if (!name.includes("EVABLE")) return;
 
       setDevices((prev) => {
@@ -97,64 +99,98 @@ export function useBLE() {
   };
 
   const connectToDevice = async (device: Device) => {
-    if (isConnecting) return null;
-    setIsConnecting(true);
+  if (isConnecting) return null;
+  setIsConnecting(true);
 
-    try {
-      console.log("Connecting to", device.name ?? device.localName ?? device.id);
+  try {
+    console.log("Connecting to", device.name ?? device.localName ?? device.id);
 
-      // stop scan
-      try { bleManager.stopDeviceScan(); } catch {}
-      setIsScanning(false);
-      if (scanTimeoutRef.current) {
-        clearTimeout(scanTimeoutRef.current);
-        scanTimeoutRef.current = null;
-      }
-
-      // clear old notifications
-      try { monitorSubRef.current?.remove(); } catch {}
-      monitorSubRef.current = null;
-
-      const already = await device.isConnected();
-      const connected = already ? device : await device.connect({ autoConnect: false });
-
-      setConnectedDevice(connected);
-
-      await connected.discoverAllServicesAndCharacteristics();
-
-      const sub = connected.monitorCharacteristicForService(
-        COUNTER_SERVICE_UUID,
-        COUNTER_CHAR_UUID,
-        (error, characteristic) => {
-          if (error) {
-            console.log("Monitor error:", error);
-            return;
-          }
-          if (!characteristic?.value) return;
-
-          const val = leUint32FromBase64(characteristic.value);
-          setCounter(val);
-          console.log("Counter =", val);
-        }
-      );
-
-      monitorSubRef.current = sub;
-      console.log("Connected + subscribed!");
-      return connected;
-    } catch (e) {
-      console.log("Connection error:", e);
-      return null;
-    } finally {
-      setIsConnecting(false);
+    // stop scan + clear timeout
+    try { bleManager.stopDeviceScan(); } catch {}
+    setIsScanning(false);
+    if (scanTimeoutRef.current) {
+      clearTimeout(scanTimeoutRef.current);
+      scanTimeoutRef.current = null;
     }
-  };
+
+    // clear old notifications
+    try { monitorSubRef.current?.remove(); } catch {}
+    monitorSubRef.current = null;
+
+    // reset counter UI state for new connection
+    setHasCounter(false);
+    setCounter(0);
+
+    const already = await device.isConnected();
+    const connected = already
+      ? device
+      : await device.connect({ autoConnect: false });
+
+    setConnectedDevice(connected);
+
+    await connected.discoverAllServicesAndCharacteristics();
+
+    const sub = connected.monitorCharacteristicForService(
+      COUNTER_SERVICE_UUID,
+      COUNTER_CHAR_UUID,
+      (error, characteristic) => {
+        if (error) {
+          console.log("Monitor error:", error);
+          return;
+        }
+        if (!characteristic?.value) return;
+
+        const val = leUint32FromBase64(characteristic.value);
+        setCounter(val);
+        setHasCounter(true);
+      }
+    );
+
+    monitorSubRef.current = sub;
+    console.log("Connected + subscribed!");
+    return connected;
+  } catch (e) {
+    console.log("Connection error:", e);
+    return null;
+  } finally {
+    setIsConnecting(false);
+  }
+};
+
+const disconnectFromDevice = async () => {
+  try {
+    // stop notifications
+    try { monitorSubRef.current?.remove(); } catch {}
+    monitorSubRef.current = null;
+
+    // stop scanning if it’s running
+    try { bleManager.stopDeviceScan(); } catch {}
+    setIsScanning(false);
+
+    // disconnect if connected
+    if (connectedDevice) {
+      try {
+        await connectedDevice.cancelConnection();
+      } catch {}
+    }
+  } finally {
+    // reset UI state back to main screen
+    setConnectedDevice(null);
+    setCounter(0);
+    setHasCounter(false);
+    setIsConnecting(false);
+    setDevices([]); 
+  }
+};
 
   return {
     devices,
     isScanning,
     isConnecting, 
     connectedDevice,
+    disconnectFromDevice,
     counter,
+    hasCounter,
     startScan,
     connectToDevice,
   };
