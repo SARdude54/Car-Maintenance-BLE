@@ -11,6 +11,8 @@ The app:
 
 This project demonstrates a simple **BLE to mobile app integration workflow** using **React Native + Expo Dev Client**.
 
+This project will integrate with the EVA capstone project. 
+
 ---
 
 # Requirements
@@ -27,7 +29,7 @@ You will need:
     - Version 34.0.4-debian
 - **Java JDK 17**
 
-Check your installations:
+### Installation Check
 
 ```bash
 ## Installation check
@@ -35,9 +37,11 @@ node -v
 npm -v
 java -version
 adb version
+```
 
 ## Setup and Run
 
+```bash
 # from repo root
 cd App
 npm install
