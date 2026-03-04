@@ -19,10 +19,12 @@ This project demonstrates a simple **BLE to mobile app integration workflow** us
 
 You will need:
 
-- **Node.js**
-- **npm** 
+- **Node.js v20.20.20**
+- **npm 10.8.2** 
 - **Android Studio**
-- **Android SDK + Platform Tools (*adb*)**
+- **Android SDK + Platform Tools**
+    - Android Debug Bridge version 1.0.41
+    - Version 34.0.4-debian
 - **Java JDK 17**
 
 Check your installations:
