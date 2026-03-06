@@ -49,11 +49,15 @@ typedef union Char_UUID_t_s {
   uint8_t Char_UUID_128[16];
 } Char_UUID_t;
 
-//tBleStatus Add_HWServW2ST_Service(void);
-//tBleStatus Add_SWServW2ST_Service(void);
-tBleStatus Add_Counter_Service(void);
-void Read_Request_CB(uint16_t handle);
+tBleStatus Add_Diagnostics_Service(void);
 tBleStatus BlueMS_Counter_Update(uint32_t counter);
+tBleStatus BlueMS_Runtime_Update(uint32_t runtime_seconds);
+tBleStatus BlueMS_RPM_Update(uint16_t rpm);
+tBleStatus BlueMS_Speed_Update(uint16_t speed);
+tBleStatus BlueMS_Distance_Update(uint32_t distance);
+tBleStatus BlueMS_VibX_Update(int16_t vibx);
+tBleStatus BlueMS_VibY_Update(int16_t viby);
+tBleStatus BlueMS_VibZ_Update(int16_t vibz);
 
 extern uint8_t Services_Max_Attribute_Records[];
 

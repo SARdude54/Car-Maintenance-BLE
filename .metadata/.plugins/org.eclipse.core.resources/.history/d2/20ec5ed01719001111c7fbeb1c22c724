@@ -1,0 +1,63 @@
+/**
+  ******************************************************************************
+  * @file    App/gatt_db.h
+  * @author  SRA Application Team
+  * @brief   Header file for App/gatt_db.c
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+
+#ifndef GATT_DB_H
+#define GATT_DB_H
+
+#include <stdint.h>
+#include <stdlib.h>
+#include "bluenrg_def.h"
+
+/**
+ * @brief Number of application services
+ */
+#define NUMBER_OF_APPLICATION_SERVICES (2)
+
+
+/** Documentation for C union Service_UUID_t */
+typedef union Service_UUID_t_s {
+  /** 16-bit UUID
+  */
+  uint16_t Service_UUID_16;
+  /** 128-bit UUID
+  */
+  uint8_t Service_UUID_128[16];
+} Service_UUID_t;
+
+/** Documentation for C union Char_UUID_t */
+typedef union Char_UUID_t_s {
+  /** 16-bit UUID
+  */
+  uint16_t Char_UUID_16;
+  /** 128-bit UUID
+  */
+  uint8_t Char_UUID_128[16];
+} Char_UUID_t;
+
+tBleStatus BlueMS_Counter_Update(uint32_t counter);
+tBleStatus BlueMS_Runtime_Update(uint32_t runtime_seconds);
+tBleStatus BlueMS_RPM_Update(uint16_t rpm);
+tBleStatus BlueMS_Speed_Update(uint16_t speed);
+tBleStatus BlueMS_Distance_Update(uint32_t distance);
+tBleStatus BlueMS_VibX_Update(int16_t vibx);
+tBleStatus BlueMS_VibY_Update(int16_t viby);
+tBleStatus BlueMS_VibZ_Update(int16_t vibz);
+
+extern uint8_t Services_Max_Attribute_Records[];
+
+#endif /* GATT_DB_H */

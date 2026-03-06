@@ -1,3 +1,10 @@
-../BlueNRG_MS/App/gatt_db.c:64:12:Add_Counter_Service	64	static
-../BlueNRG_MS/App/gatt_db.c:99:12:BlueMS_Counter_Update	32	static
-../BlueNRG_MS/App/gatt_db.c:124:6:Read_Request_CB	24	static
+../BlueNRG_MS/App/gatt_db.c:97:12:Add_Diagnostics_Service	64	static
+../BlueNRG_MS/App/gatt_db.c:230:12:BlueMS_Counter_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:247:12:BlueMS_Runtime_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:264:12:BlueMS_RPM_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:281:12:BlueMS_Speed_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:298:12:BlueMS_Distance_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:315:12:BlueMS_VibX_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:332:12:BlueMS_VibY_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:349:12:BlueMS_VibZ_Update	32	static
+../BlueNRG_MS/App/gatt_db.c:372:6:Read_Request_CB	24	static
