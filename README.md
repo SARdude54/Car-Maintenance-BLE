@@ -17,10 +17,6 @@ This project will integrate with the EVA capstone project.
 
 # Requirements
 
-## Host Machine (Ubuntu)
-
-You will need:
-
 - **Node.js v20.20.20**
 - **npm 10.8.2** 
 - **Android Studio**
